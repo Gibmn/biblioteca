@@ -25,6 +25,7 @@ public class Main {
             System.out.println("2. Adcionar livro");
             System.out.println("3. Alugar");
             System.out.println("4. Devolução");
+            System.out.println("5. Mostrar todos os livros e seus IDS");
             choice = input.nextInt();
 
             switch (choice) {
@@ -38,6 +39,8 @@ public class Main {
                     System.out.print(alugar(estante, users) ? "foi alugado." : "\nNão foi possivel alugar.");
                 case 4 ->
                     devolucao(users, estante);
+                case 5 ->
+                    mostrarLivros(estante);
                 default ->
                     throw new AssertionError();
             }
@@ -103,10 +106,7 @@ public class Main {
         System.out.println("\n");
 
         if (bookIndex == -1) {
-            for (int i = 0; i < estante.size(); i++) {
-                temporary = i + 1;
-                System.out.println("livro: " + estante.get(i).name + ", index: " + temporary);
-            }
+            mostrarLivros(estante);
         }
         // printa todos livros e os ids da estante
 
@@ -172,5 +172,13 @@ public class Main {
         int bookIndex = users.get(userID).bookID;
         users.get(userID).bookID = 0;
         estante.get(bookIndex).devolução();
+    }
+    
+    public static void mostrarLivros(ArrayList<Book> estante) {
+    // função para mostrar todos os livros existentes
+    
+      for (int i = 0; i < estante.size(); i++){
+          System.out.println("Livro: " + estante.get(i).name + ", Index: " +(i + 1) );
+      }
     }
 }
