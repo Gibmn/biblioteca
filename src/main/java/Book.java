@@ -1,4 +1,6 @@
 
+import java.util.*;
+
 public class Book {
 
     String name;
@@ -19,14 +21,12 @@ public class Book {
         this.year = year;
     }
 
-    public void alugar(int ownerId) {
+    public void alugar(ArrayList<User> users, int ownerId) {
         this.ownerId = ownerId;
         this.alugado = true;
-        //  this.name = this.name.replace(" (alugável)", "");
     }
 
     public void devolução() {
-        this.ownerId = 0;
         this.alugado = false;
     }
 }

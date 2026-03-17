@@ -9,7 +9,6 @@ public class Main {
     public static void main(String[] args) {
 
         int choice = -1; // escolha que o usuario fará
-
         ArrayList<User> users = new ArrayList<>();
         ArrayList<Book> estante = base();
         // listas de usúarios e livros
@@ -96,44 +95,37 @@ public class Main {
 
         System.out.println("Qual é seu ID de usuário?");
         userID = input.nextInt();
-        userID -= 1;
-
-        if (userID < 0 || userID >= users.size()) {
+        userID = userID - 1;
+        if (userID < 0 || userID - 1 >= users.size()) {
             System.out.println("ID de usuário inválido.");
             return false;
         }
         //previne o "Out of bounds" na ArrayList users
 
-        System.out.println("em qual lugar da estante está o seu livro(aperte zero para ver os lugares)");
-        bookIndex = input.nextInt();
-        bookIndex -= - 1;
-        System.out.println("\n");
-
-        if (bookIndex == -1) {
-            mostrarLivros(estante);
-            System.out.println("em qual lugar da estante está o seu livro?");
-            bookIndex = input.nextInt();
-            bookIndex -= 1;
-            System.out.println("\n");
-        }
+        mostrarLivros(estante);
         // printa todos livros e os ids da estante
+
+        System.out.println("Em qual lugar da estante está o seu livro?");
+        bookIndex = input.nextInt();
+        bookIndex = bookIndex - 1;
+        System.out.println("\n");
 
         if (bookIndex < 0 || bookIndex >= estante.size()) {
             System.err.println("Livro inválido.");
             return false;
         }
-        if (estante.get(bookIndex).ownerId == userID) {
-            System.err.println("Este usuário ja alugou esse livro.");
-            return false;
-        }
         if (estante.get(bookIndex).alugado) {
+            if (estante.get(bookIndex).ownerId == userID) {
+                System.err.println("Este usuário ja alugou esse livro.");
+                return false;
+            }
             System.err.println("Livro já alugado por outro usuário");
             return false;
         }
         // tratamento de erros e casos inválidos
 
-        System.out.println("deseja alugar este livro?(s/sim ou n/não): \n");
         printBook(estante.get(bookIndex));
+        System.out.println("deseja alugar este livro?(s/sim ou n/não): \n");
         vaiAlugar = (input.next()).substring(0, 1);
 
         if (!vaiAlugar.equalsIgnoreCase("S")) {
@@ -142,8 +134,8 @@ public class Main {
         }
         // Caso o usuario não queira alugar
 
-        estante.get(bookIndex).ownerId = userID;
-        users.get(userID - 1).bookID = bookIndex;
+        estante.get(bookIndex).alugar(users, userID);
+        users.get(userID).alugar(estante, bookIndex);
         printBook(estante.get(bookIndex));
 
         System.out.println(estante.get(bookIndex).name);
@@ -171,32 +163,36 @@ public class Main {
         int userID;
         System.out.println("ID do usuário.");
         userID = input.nextInt();
-        userID -= 1;
-
+        userID = userID - 1;
         if (userID < 0 || userID >= users.size()) {
             System.out.println("ID de usuário inválido.");
             return;
         }
         // previne "out of bounds"
-
+        if (!users.get(userID).alugando) {
+            System.out.println("não está alugando nenhum livro.");
+            return;
+        }
         int bookIndex = users.get(userID).bookID;
-        users.get(userID - 1).alugando = false;
+        users.get(userID).devolução();
         estante.get(bookIndex).devolução();
+        System.out.println("Devolução bem-sucedida");
+
     }
 
     public static void mostrarLivros(ArrayList<Book> estante) {
         // função para mostrar todos os livros existentes
 
-        for (int i = 1; i <= estante.size(); i++) {
-            System.out.println("Livro: " + estante.get(i - 1).name + ", Index: " + (i));
+        for (int i = 0; i < estante.size(); i++) {
+            System.out.println("Nome: " + estante.get(i).name + ", ID: " + (i + 1));
         }
     }
 
     public static void mostrarUsuarios(ArrayList<User> users) {
         // função para mostrar todos os usuarios existentes
 
-        for (int i = 1; i <= users.size(); i++) {
-            System.out.println("Nome: " + users.get(i - 1).name + ", ID: " + (i));
+        for (int i = 0; i < users.size(); i++) {
+            System.out.println("Nome: " + users.get(i).name + ", ID: " + (i + 1));
         }
     }
 }
