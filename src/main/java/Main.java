@@ -7,9 +7,6 @@ public class Main {
     // scanner global
 
     public static void main(String[] args) {
-        int[] nextUser = {1}; // para passar nas funções por referencia
-        int[] nextBook = {1};
-        // obra do tinhoso
 
         int choice = -1; // escolha que o usuario fará
 
@@ -18,6 +15,7 @@ public class Main {
         // listas de usúarios e livros
 
         while (true) {
+            System.out.println(" ");
             System.out.println("ESCOLHA UMA AÇÃO");
             System.out.println(" ");
             System.out.println("0. Sair do programa");
@@ -26,11 +24,16 @@ public class Main {
             System.out.println("3. Alugar");
             System.out.println("4. Devolução");
             System.out.println("5. Mostrar todos os livros e seus IDS");
+            System.out.println("6. Mostrar todos os usuários e seus IDS");
             choice = input.nextInt();
 
             switch (choice) {
-                case 0 ->
+                case -1 ->
+                    System.out.println("Faça uma escolha válida.");
+                case 0 -> {
+                    input.close();
                     System.exit(1);
+                }
                 case 1 ->
                     users.add(createUser());
                 case 2 ->
@@ -41,12 +44,13 @@ public class Main {
                     devolucao(users, estante);
                 case 5 ->
                     mostrarLivros(estante);
+                case 6 ->
+                    mostrarUsuarios(users);
                 default ->
-                    throw new AssertionError();
+                    System.out.println("Faça uma escolha válida.");
             }
             // enhanced switch para as escolhas
 
-            input.close();
         }
     }
 
@@ -55,7 +59,7 @@ public class Main {
         System.out.println("O autor do livro é: " + book.author);
         System.out.println("O leitor atual é: " + book.ownerId);
         System.out.println("O livro foi publicado em: " + book.year);
-        System.out.println("O livro está alugado: " + ((book.ownerId != 0) ? "sim" : "não"));
+        System.out.println("O livro está alugado: " + ((book.alugado) ? "sim" : "não"));
     }
 
     public static ArrayList<Book> base() {
@@ -88,13 +92,13 @@ public class Main {
     public static boolean alugar(ArrayList<Book> estante, ArrayList<User> users) {
         String vaiAlugar;
         int bookIndex;
-        int temporary;
-        int userID = 0;
+        int userID;
 
         System.out.println("Qual é seu ID de usuário?");
         userID = input.nextInt();
+        userID -= 1;
 
-        if (userID < 1 || userID > users.size()) {
+        if (userID < 0 || userID >= users.size()) {
             System.out.println("ID de usuário inválido.");
             return false;
         }
@@ -102,11 +106,15 @@ public class Main {
 
         System.out.println("em qual lugar da estante está o seu livro(aperte zero para ver os lugares)");
         bookIndex = input.nextInt();
-        bookIndex = bookIndex - 1;
+        bookIndex -= - 1;
         System.out.println("\n");
 
         if (bookIndex == -1) {
             mostrarLivros(estante);
+            System.out.println("em qual lugar da estante está o seu livro?");
+            bookIndex = input.nextInt();
+            bookIndex -= 1;
+            System.out.println("\n");
         }
         // printa todos livros e os ids da estante
 
@@ -118,7 +126,7 @@ public class Main {
             System.err.println("Este usuário ja alugou esse livro.");
             return false;
         }
-        if (estante.get(bookIndex).ownerId > 0) {
+        if (estante.get(bookIndex).alugado) {
             System.err.println("Livro já alugado por outro usuário");
             return false;
         }
@@ -135,7 +143,7 @@ public class Main {
         // Caso o usuario não queira alugar
 
         estante.get(bookIndex).ownerId = userID;
-        users.get(userID).bookID = bookIndex;
+        users.get(userID - 1).bookID = bookIndex;
         printBook(estante.get(bookIndex));
 
         System.out.println(estante.get(bookIndex).name);
@@ -161,24 +169,34 @@ public class Main {
 
     public static void devolucao(ArrayList<User> users, ArrayList<Book> estante) {
         int userID;
+        System.out.println("ID do usuário.");
         userID = input.nextInt();
+        userID -= 1;
 
-        if (userID < 0 || userID > users.size()) {
+        if (userID < 0 || userID >= users.size()) {
             System.out.println("ID de usuário inválido.");
             return;
         }
         // previne "out of bounds"
 
         int bookIndex = users.get(userID).bookID;
-        users.get(userID).bookID = 0;
+        users.get(userID - 1).alugando = false;
         estante.get(bookIndex).devolução();
     }
-    
+
     public static void mostrarLivros(ArrayList<Book> estante) {
-    // função para mostrar todos os livros existentes
-    
-      for (int i = 0; i < estante.size(); i++){
-          System.out.println("Livro: " + estante.get(i).name + ", Index: " +(i + 1) );
-      }
+        // função para mostrar todos os livros existentes
+
+        for (int i = 1; i <= estante.size(); i++) {
+            System.out.println("Livro: " + estante.get(i - 1).name + ", Index: " + (i));
+        }
+    }
+
+    public static void mostrarUsuarios(ArrayList<User> users) {
+        // função para mostrar todos os usuarios existentes
+
+        for (int i = 1; i <= users.size(); i++) {
+            System.out.println("Nome: " + users.get(i - 1).name + ", ID: " + (i));
+        }
     }
 }

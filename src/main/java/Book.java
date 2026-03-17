@@ -5,6 +5,7 @@ public class Book {
     String author;
     int ownerId;
     int year;
+    boolean alugado = false;
 
     Book(
             String name,
@@ -20,10 +21,12 @@ public class Book {
 
     public void alugar(int ownerId) {
         this.ownerId = ownerId;
+        this.alugado = true;
         //  this.name = this.name.replace(" (alugável)", "");
     }
 
     public void devolução() {
         this.ownerId = 0;
+        this.alugado = false;
     }
 }
