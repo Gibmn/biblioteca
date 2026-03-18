@@ -61,6 +61,7 @@ public class Main {
 
         }
         input.close();
+
         System.exit(1);
     }
 
@@ -145,7 +146,7 @@ public class Main {
         // Caso o usuario não queira alugar
 
         estante.get(bookIndex).alugar(userID);
-        users.get(userID).alugar( bookIndex);
+        users.get(userID).alugar(bookIndex);
         printBook(estante, (bookIndex));
 
         System.out.println(estante.get(bookIndex).name);
