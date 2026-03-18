@@ -1,5 +1,4 @@
 
-import java.util.*;
 
 public class User {
 
@@ -13,7 +12,7 @@ public class User {
         this.name = name;
     }
 
-    public void alugar(ArrayList<Book> estante, int bookID) {
+    public void alugar(int bookID) {
         this.bookID = bookID;
         this.alugando = true;
     }

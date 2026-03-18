@@ -1,5 +1,4 @@
 
-import java.util.*;
 
 public class Book {
 
@@ -21,7 +20,7 @@ public class Book {
         this.year = year;
     }
 
-    public void alugar(ArrayList<User> users, int ownerId) {
+    public void alugar(int ownerId) {
         this.ownerId = ownerId;
         this.alugado = true;
     }

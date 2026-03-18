@@ -10,7 +10,7 @@ public class Main {
 
     public static void main(String[] args) {
         boolean running = true;
-        int choice = -1; // escolha que o usuario fará
+        int choice; // escolha que o usuario fará
         int bookChoice;
         ArrayList<User> users = new ArrayList<>();
         ArrayList<Book> estante = base();
@@ -106,7 +106,7 @@ public class Main {
         System.out.println("Qual é seu ID de usuário?");
         userID = input.nextInt();
         userID = userID - 1;
-        if (userID < 0 || userID - 1 >= users.size()) {
+        if (userID < 0 || userID >= users.size()) {
             System.out.println("ID de usuário inválido.");
             return false;
         }
@@ -144,8 +144,8 @@ public class Main {
         }
         // Caso o usuario não queira alugar
 
-        estante.get(bookIndex).alugar(users, userID);
-        users.get(userID).alugar(estante, bookIndex);
+        estante.get(bookIndex).alugar(userID);
+        users.get(userID).alugar( bookIndex);
         printBook(estante, (bookIndex));
 
         System.out.println(estante.get(bookIndex).name);
